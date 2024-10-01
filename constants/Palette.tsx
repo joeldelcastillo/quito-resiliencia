@@ -1,13 +1,13 @@
 const COLORS = {
-  title: '#D9D9D9',
-  background: '#131313',
-  secondary: '#222222',
-  ternary: '#515151',
-  blue: '#0074B6',
+  title: "#131313",
+  background: "#D9D9D9",
+  secondary: "#222222",
+  ternary: "#515151",
+  blue: "#0074B6",
 
   // -----------------
-  subtitle: '#747688',
-  bottomTab: '#212121',
+  subtitle: "#747688",
+  bottomTab: "#212121",
 };
 
 // const COLORS = {

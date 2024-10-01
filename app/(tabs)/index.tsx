@@ -1,20 +1,21 @@
-
-import * as Haptics from 'expo-haptics';
-import React, { useLayoutEffect } from 'react';
-import { Text, View, Button, StyleSheet, Dimensions } from 'react-native';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import MapView, { Marker, Circle } from 'react-native-maps';
-import Slider from '@react-native-community/slider';
-import { Ionicons } from '@expo/vector-icons';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Haptics from "expo-haptics";
+import React, { useEffect, useLayoutEffect } from "react";
+import { Text, View, Button, StyleSheet, Dimensions } from "react-native";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import MapView, { Marker, Circle } from "react-native-maps";
+import Slider from "@react-native-community/slider";
+import { Ionicons } from "@expo/vector-icons";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { checkCompleteTrip, TripType, tripInitialState } from '@/functions/types/TripTypes';
 // import AddressSearch from '@/components/AddressSearch';
-import COLORS from '@/constants/Palette';
-import FONTS from '@/constants/Fonts';
+import COLORS from "@/constants/Palette";
+import FONTS from "@/constants/Fonts";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 // import { Auth } from '@/functions/firebase/connection';
 
-const window = Dimensions.get('window');
+const window = Dimensions.get("window");
 
 const TabOneScreen: React.FC = () => {
   // const { trip } = useLocalSearchParams<{ trip: Trip }>();
@@ -23,9 +24,26 @@ const TabOneScreen: React.FC = () => {
   const [radius, setRadius] = React.useState(1000); // initial radius in meters
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const [indexSearch, setIndexSearch] = React.useState<number | null>(null);
-  const navigation = useNavigation();
-  const stringIndex = ['Punto de Partida', 'Punto de Destino'];
 
+  const navigation = useNavigation();
+  const stringIndex = ["Punto de Partida", "Punto de Destino"];
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+
+    mapRef.current?.fitToCoordinates([
+      {
+        latitude: 60.78825,
+        longitude: -122.4324,
+      },
+      {
+        latitude: 67.7749,
+        longitude: -122.4194,
+      },
+    ]);
+  }, [radius]);
 
   // callbacks
   const handleSheetChanges = React.useCallback((index: number) => {
@@ -34,11 +52,15 @@ const TabOneScreen: React.FC = () => {
     }
   }, []);
 
-
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <View style={styles.backButton}>
-        <Ionicons name="arrow-back" size={25} color={COLORS.title} onPress={() => router.back()} />
+        <Ionicons
+          name="arrow-back"
+          size={25}
+          color={COLORS.title}
+          onPress={() => router.back()}
+        />
       </View>
 
       <MapView
@@ -46,8 +68,7 @@ const TabOneScreen: React.FC = () => {
         style={styles.map}
         userInterfaceStyle="light"
         initialRegion={initialRegion}
-      >
-      </MapView>
+      ></MapView>
       <View style={styles.sliderContainer}>
         <Slider
           style={styles.slider}
@@ -58,29 +79,23 @@ const TabOneScreen: React.FC = () => {
           onValueChange={(value) => setRadius(value)}
         />
       </View>
-      {/* <BottomSheet
+      <BottomSheet
         ref={bottomSheetRef}
         onChange={handleSheetChanges}
-        snapPoints={['40%', '90%']} // 50% is the initial snap point
+        snapPoints={["40%", "90%"]} // 50% is the initial snap point
         backgroundStyle={{ backgroundColor: COLORS.background }}
         handleIndicatorStyle={{ backgroundColor: COLORS.blue }}
+        enablePanDownToClose
       >
         <BottomSheetView style={styles.bottomSheet}>
-          <Text style={[styles.title, { textAlign: 'center' }]}>{indexSearch === null ? 'Planea tu Ruta' : stringIndex[indexSearch]}</Text>
-          <AddressSearch trip={trip} setTrip={setTrip} indexSearch={0} mapRef={mapRef}
-            onFocus={() => { bottomSheetRef.current?.snapToIndex(1) }}
-            onPress={() => { bottomSheetRef.current?.snapToIndex(0) }}
-          />
-          <AddressSearch trip={trip} setTrip={setTrip} indexSearch={1} mapRef={mapRef}
-            onFocus={() => { bottomSheetRef.current?.snapToIndex(1) }}
-            onPress={() => { bottomSheetRef.current?.snapToIndex(0) }}
-          />
+          <Text style={[styles.title, { textAlign: "center" }]}>
+            {indexSearch === null ? "Planea tu Ruta" : stringIndex[indexSearch]}
+          </Text>
+          <FontAwesome5 name="fire-alt" size={24} color="black" />
           <View style={{ height: 40 }} />
-          <MyButton title="Siguiente" onPress={onNextPressed} disabled={!checkCompleteTrip(trip)} />
         </BottomSheetView>
-      </BottomSheet> */}
-
-    </View>
+      </BottomSheet>
+    </GestureHandlerRootView>
   );
 };
 
@@ -93,89 +108,84 @@ const initialRegion = {
   longitudeDelta: 0.0069,
 };
 
-
-
-
-
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    height: 'auto',
+    width: "100%",
+    height: "auto",
     // paddingHorizontal: 15,
   },
   map: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     borderRadius: 10,
-    overflow: 'hidden'
+    overflow: "hidden",
   },
   day: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
-    backgroundColor: 'grey',
+    fontWeight: "bold",
+    backgroundColor: "grey",
     padding: 10,
   },
   infoContainer: {
     padding: 10,
   },
   subtitle: {
-    color: 'grey',
+    color: "grey",
     fontSize: 14,
   },
   details: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   price: {
-    color: 'white',
+    color: "white",
   },
   time: {
-    color: 'white',
+    color: "white",
   },
   passengers: {
-    color: 'white',
+    color: "white",
   },
   profileImage: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 10,
   },
   buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     paddingVertical: 10,
   },
 
   // Slider
 
   sliderContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 50,
     left: 20,
     right: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 10,
     borderRadius: 10,
     elevation: 5,
   },
   slider: {
-    width: '100%',
+    width: "100%",
   },
-
 
   // Create Routes
 
   backButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 60,
     left: 20,
     zIndex: 1,
-    backgroundColor: '#333',
+    backgroundColor: "#333",
     padding: 10,
     borderRadius: 25,
   },
@@ -185,7 +195,7 @@ const styles = StyleSheet.create({
     // bottom: 0,
     // left: 0,
     // right: 0,
-    backgroundColor: '#111',
+    backgroundColor: COLORS.background,
     padding: 20,
   },
   title: {
@@ -195,21 +205,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   menuContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   stopContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#333',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#333",
     padding: 10,
     borderRadius: 10,
     marginBottom: 10,
   },
   stopTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   stopText: {
@@ -227,14 +237,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   doneButton: {
-    backgroundColor: '#555',
+    backgroundColor: "#555",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   doneButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
   },
 });
-
