@@ -108,6 +108,7 @@ const TabOneScreen: React.FC = () => {
             style={styles.fireButton}
             onPress={() => {
               setFuego(fuego + 1);
+              router.push("/(forms)/form");
             }}
           >
             <Text style={styles.fireButtonText}>Incendio </Text>
