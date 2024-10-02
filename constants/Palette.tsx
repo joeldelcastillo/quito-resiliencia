@@ -4,6 +4,7 @@ const COLORS = {
   secondary: "#222222",
   ternary: "#515151",
   blue: "#0074B6",
+  white: "#fff",
 
   // -----------------
   subtitle: "#747688",

@@ -30,6 +30,18 @@ const TabOneScreen: React.FC = () => {
 
   const navigation = useNavigation();
   const stringIndex = ["Punto de Partida", "Punto de Destino"];
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+
+    mapRef.current?.fitToCoordinates([
+      {
+        latitude: -0.19688,
+        longitude: -78.4355,
+      },
+    ]);
+  }, [radius]);
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -61,7 +73,7 @@ const TabOneScreen: React.FC = () => {
         <Ionicons
           name="arrow-back"
           size={25}
-          color={COLORS.title}
+          color={COLORS.white}
           onPress={() => router.back()}
         />
       </View>
@@ -189,7 +201,7 @@ const styles = StyleSheet.create({
 
   sliderContainer: {
     position: "absolute",
-    bottom: 50,
+    bottom: 10,
     left: 20,
     right: 20,
     backgroundColor: "white",
@@ -208,13 +220,13 @@ const styles = StyleSheet.create({
     top: 60,
     left: 20,
     zIndex: 1,
-    backgroundColor: "#333",
+    backgroundColor: "#344",
     padding: 10,
     borderRadius: 25,
   },
   openSheetButton: {
     position: "absolute",
-    bottom: 120,
+    bottom: 75,
     right: 20,
     backgroundColor: "#344",
     padding: 15,
