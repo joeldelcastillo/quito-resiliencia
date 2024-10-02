@@ -35,18 +35,7 @@ const TabOneScreen: React.FC = () => {
     navigation.setOptions({
       headerShown: false,
     });
-
-    mapRef.current?.fitToCoordinates([
-      {
-        latitude: 60.78825,
-        longitude: -122.4324,
-      },
-      {
-        latitude: 67.7749,
-        longitude: -122.4194,
-      },
-    ]);
-  }, [radius]);
+  }, []);
 
   // callbacks
   const handleSheetChanges = React.useCallback((index: number) => {
@@ -58,6 +47,13 @@ const TabOneScreen: React.FC = () => {
   const openBottomSheet = () => {
     bottomSheetRef.current?.expand();
   };
+
+  const [fuego, setFuego] = React.useState<number>(0);
+
+  //prints on console boton presionado every time fuego changes
+  React.useEffect(() => {
+    console.log("Boton presionado", fuego);
+  }, [fuego]);
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -94,16 +90,6 @@ const TabOneScreen: React.FC = () => {
         <Text style={styles.openSheetButtonText}>Reportar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.fireButton}
-        onPress={() => {
-          console.log("Botón de fuego presionado");
-        }}
-      >
-        <FontAwesome5 name="fire-alt" size={24} color="white" />
-        <Text style={styles.fireButtonText}>Reportar Incendio</Text>
-      </TouchableOpacity>
-
       <BottomSheet
         ref={bottomSheetRef}
         onChange={handleSheetChanges}
@@ -118,7 +104,12 @@ const TabOneScreen: React.FC = () => {
               ? "Reportar un prolema"
               : stringIndex[indexSearch]}
           </Text>
-          <TouchableOpacity style={styles.fireButton}>
+          <TouchableOpacity
+            style={styles.fireButton}
+            onPress={() => {
+              setFuego(fuego + 1);
+            }}
+          >
             <Text style={styles.fireButtonText}>Incendio </Text>
             <View style={{ marginRight: 10 }} />
             <FontAwesome5 name="fire-alt" size={20} color="darkred" />
