@@ -5,7 +5,10 @@ import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import MapView, { Marker, Circle } from "react-native-maps";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetView,
+  TouchableOpacity,
+} from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { checkCompleteTrip, TripType, tripInitialState } from '@/functions/types/TripTypes';
 // import AddressSearch from '@/components/AddressSearch';
@@ -52,6 +55,10 @@ const TabOneScreen: React.FC = () => {
     }
   }, []);
 
+  const openBottomSheet = () => {
+    bottomSheetRef.current?.expand();
+  };
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <View style={styles.backButton}>
@@ -79,6 +86,24 @@ const TabOneScreen: React.FC = () => {
           onValueChange={(value) => setRadius(value)}
         />
       </View>
+
+      <TouchableOpacity
+        style={styles.openSheetButton}
+        onPress={openBottomSheet}
+      >
+        <Text style={styles.openSheetButtonText}>Reportar</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.fireButton}
+        onPress={() => {
+          console.log("Botón de fuego presionado");
+        }}
+      >
+        <FontAwesome5 name="fire-alt" size={24} color="white" />
+        <Text style={styles.fireButtonText}>Reportar Incendio</Text>
+      </TouchableOpacity>
+
       <BottomSheet
         ref={bottomSheetRef}
         onChange={handleSheetChanges}
@@ -89,9 +114,15 @@ const TabOneScreen: React.FC = () => {
       >
         <BottomSheetView style={styles.bottomSheet}>
           <Text style={[styles.title, { textAlign: "center" }]}>
-            {indexSearch === null ? "Planea tu Ruta" : stringIndex[indexSearch]}
+            {indexSearch === null
+              ? "Reportar un prolema"
+              : stringIndex[indexSearch]}
           </Text>
-          <FontAwesome5 name="fire-alt" size={24} color="black" />
+          <TouchableOpacity style={styles.fireButton}>
+            <Text style={styles.fireButtonText}>Incendio </Text>
+            <View style={{ marginRight: 10 }} />
+            <FontAwesome5 name="fire-alt" size={20} color="darkred" />
+          </TouchableOpacity>
           <View style={{ height: 40 }} />
         </BottomSheetView>
       </BottomSheet>
@@ -189,7 +220,20 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 25,
   },
-
+  openSheetButton: {
+    position: "absolute",
+    bottom: 120,
+    right: 20,
+    backgroundColor: "#344",
+    padding: 15,
+    borderRadius: 50,
+    alignItems: "center",
+  },
+  openSheetButtonText: {
+    color: "white",
+    fontSize: 18,
+    fontFamily: FONTS.bold,
+  },
   bottomSheet: {
     // position: 'absolute',
     // bottom: 0,
@@ -203,6 +247,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: FONTS.bold,
     marginBottom: 20,
+  },
+  fireButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    padding: 15,
+    borderRadius: 45,
+  },
+  fireButtonText: {
+    marginLeft: 10,
+    fontSize: 18,
+    color: "black",
   },
   menuContainer: {
     flexDirection: "row",
